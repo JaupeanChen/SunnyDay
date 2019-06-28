@@ -1,5 +1,6 @@
 package com.example.sunnyday;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,6 +24,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import interfaces.heweather.com.interfacesmodule.bean.Code;
+import interfaces.heweather.com.interfacesmodule.bean.weather.now.Now;
+import interfaces.heweather.com.interfacesmodule.bean.weather.now.NowBase;
+import interfaces.heweather.com.interfacesmodule.view.HeConfig;
+import interfaces.heweather.com.interfacesmodule.view.HeWeather;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -156,6 +162,18 @@ public class ChooseArea extends AppCompatActivity {
                         getSupportActionBar().setTitle(selectedCity.getName() + "市");
                         level = LEVEL_COUNTY;
                         adapter.notifyDataSetChanged();
+                        listView.setSelection(0);
+                        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                County selectedCounty = countyList.get(position);
+                                String weatherId = selectedCounty.getWeatherId();
+                                Intent intent = new Intent(ChooseArea.this,WeatherActivity.class);
+                                intent.putExtra("weather_id",weatherId);
+                                startActivity(intent);
+
+                            }
+                        });
                     }
                 });
 
