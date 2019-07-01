@@ -1,6 +1,8 @@
 package com.example.sunnyday;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -50,6 +52,7 @@ public class ChooseArea extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.area_choose);
+//        switchToWeatherIfHaveChooseCity();
         Toolbar toolbar = findViewById(R.id.toolbar);
         progressBar = findViewById(R.id.progressbar);
         toolbar.setTitle("");
@@ -57,6 +60,15 @@ public class ChooseArea extends AppCompatActivity {
         getSupportActionBar().setTitle("China");
         listView = findViewById(R.id.list_view);
         queryProvince("http://guolin.tech/api/china");
+    }
+
+    public void switchToWeatherIfHaveChooseCity(){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(ChooseArea.this);
+        if (preferences.getString("pic_content",null) != null){
+            Intent intent = new Intent(ChooseArea.this,WeatherActivity.class);
+            startActivity(intent);
+            finish();
+        }
     }
 
     public void queryProvince(String url){
@@ -169,6 +181,7 @@ public class ChooseArea extends AppCompatActivity {
                                 County selectedCounty = countyList.get(position);
                                 String weatherId = selectedCounty.getWeatherId();
                                 Intent intent = new Intent(ChooseArea.this,WeatherActivity.class);
+                                intent.putExtra("city_name",selectedCounty.getName());
                                 intent.putExtra("weather_id",weatherId);
                                 startActivity(intent);
 
