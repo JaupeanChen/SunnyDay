@@ -41,41 +41,58 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v4.widget.NestedScrollView
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         app:layout_behavior="android.support.design.widget.AppBarLayout$ScrollingViewBehavior">
-        <!--对ScrollView指定布局行为，也就是不让它遮挡到ToolBar，因为CoordinatorLayout就是一个加强版的FrameLayout。
-        当然，可以看出来，是AppBarLayout进行指定的-->
-        <!--还有CollapsingToolbarLayout和ScrollView一起使用会有滑动bug，所以使用NestedScrollView，效果一样-->
 
-
-        <FrameLayout
+        <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            app:layout_behavior="android.support.design.widget.AppBarLayout$ScrollingViewBehavior">
+            <!--对ScrollView指定布局行为，也就是不让它遮挡到ToolBar，因为CoordinatorLayout就是一个加强版的FrameLayout。
+            当然，可以看出来，是AppBarLayout进行指定的-->
+            <!--还有CollapsingToolbarLayout和ScrollView一起使用会有滑动bug，所以使用NestedScrollView，效果一样-->
 
-            <ImageView
-                android:id="@+id/background_view"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop"/>
+                android:layout_height="match_parent">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                <ImageView
+                    android:id="@+id/background_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"/>
 
-                <include layout="@layout/now_layout" />
-                <include layout="@layout/air_now" />
-                <include layout="@layout/lifestyle_layout" />
-                <include layout="@layout/forecast_layout" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-            </LinearLayout>
+                    <include layout="@layout/now_layout" />
+                    <include layout="@layout/air_now" />
+                    <include layout="@layout/lifestyle_layout" />
+                    <include layout="@layout/forecast_layout" />
 
-        </FrameLayout>
+                </LinearLayout>
+
+            </FrameLayout>
 
 
-    </android.support.v4.widget.NestedScrollView>
+
+
+        </android.support.v4.widget.NestedScrollView>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+
+
+
+
+
+
+
 
 </android.support.design.widget.CoordinatorLayout>
 

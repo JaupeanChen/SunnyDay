@@ -6,7 +6,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v4.widget.NestedScrollView;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -44,6 +44,8 @@ import okhttp3.Response;
 
 
 public class WeatherActivity extends AppCompatActivity {
+    public String weatherId;
+
     private TextView date, tmp,weatherNow,wind,maxTmp;
     private LinearLayout linearLayout;
 
@@ -54,6 +56,8 @@ public class WeatherActivity extends AppCompatActivity {
     private ImageView titleView;
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private ImageView backgroundView;
+
+    private SwipeRefreshLayout swipeRefreshLayout;
 
 
     @Override
@@ -68,7 +72,6 @@ public class WeatherActivity extends AppCompatActivity {
         weatherNow =findViewById(R.id.weather_now);
         wind = findViewById(R.id.wind);
         maxTmp =findViewById(R.id.max_tmp);
-        linearLayout =findViewById(R.id.forecast);
 
         comfit = findViewById(R.id.comfit);
         wear = findViewById(R.id.wear);
@@ -78,6 +81,11 @@ public class WeatherActivity extends AppCompatActivity {
         ql = findViewById(R.id.ql);
         aqi = findViewById(R.id.aqi);
         pm = findViewById(R.id.pm25);
+
+        linearLayout =findViewById(R.id.forecast);
+
+        swipeRefreshLayout = findViewById(R.id.swipe_layout);
+        setListenerForSwipe();
 
         titleView =findViewById(R.id.image);
         toolbar = findViewById(R.id.toolbar_weather);
@@ -92,8 +100,7 @@ public class WeatherActivity extends AppCompatActivity {
         collapsingToolbarLayout.setCollapsedTitleTextColor(292421);
         collapsingToolbarLayout.setTitle(name);
 
-
-        String weatherId = getIntent().getStringExtra("weather_id");
+        weatherId = getIntent().getStringExtra("weather_id");
         queryWeatherNow(weatherId);
         queryWeatherAir(weatherId);
         queryWeatherLifestyle(weatherId);
@@ -106,6 +113,7 @@ public class WeatherActivity extends AppCompatActivity {
         HeWeather.getWeatherNow(WeatherActivity.this, weatherId, new HeWeather.OnResultWeatherNowBeanListener() {
             @Override
             public void onError(Throwable throwable) {
+                Toast.makeText(WeatherActivity.this,"请检查网络",Toast.LENGTH_SHORT).show();
 
             }
 
@@ -151,7 +159,7 @@ public class WeatherActivity extends AppCompatActivity {
                     pm.setText(city.getPm25());
                 }else {
                     Toast.makeText(WeatherActivity.this,"Fail to get air_now message.",Toast.LENGTH_SHORT).show();
-                    String string = "暂无数据";
+                    String string = "--";
                     ql.setText(string);
                     aqi.setText(string);
                     pm.setText(string);
@@ -204,6 +212,7 @@ public class WeatherActivity extends AppCompatActivity {
         HeWeather.getWeatherForecast(WeatherActivity.this, weatherId, new HeWeather.OnResultWeatherForecastBeanListener() {
             @Override
             public void onError(Throwable throwable) {
+                swipeRefreshLayout.setRefreshing(false);
 
             }
 
@@ -257,6 +266,13 @@ public class WeatherActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case android.R.id.home :
+                //因为前面在用户选择过城市之后，做了缓存处理，再次进入程序时如果判断到缓存存在就直接跳到天气界面
+                //所以当我们在天气界面要返回到选择界面的时候，它还是判定我们已经缓存了，还是会直接跳回来，所以在这里我们要
+                //先将缓存的城市名和天气id删除掉
+                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(WeatherActivity.this).edit();
+                editor.remove("city_name");
+                editor.remove("weather_id");
+                editor.apply();
                 Intent intent = new Intent(WeatherActivity.this,ChooseArea.class);
                 startActivity(intent);
                 break;
@@ -306,5 +322,58 @@ public class WeatherActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    public void setListenerForSwipe(){
+        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorPrimary));
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                setWeatherViewInvisible();
+                updateWeatherInfo();
+            }
+        });
+    }
+
+    public void updateWeatherInfo(){
+        queryWeatherNow(weatherId);
+        queryWeatherAir(weatherId);
+        queryWeatherLifestyle(weatherId);
+        queryWeatherForecast(weatherId);
+        requestPic();
+        swipeRefreshLayout.setRefreshing(false);
+        setWeatherViewVisible();
+        Toast.makeText(WeatherActivity.this,"刷新成功",Toast.LENGTH_SHORT).show();
+
+    }
+
+    public void setWeatherViewInvisible(){
+        tmp.setVisibility(View.INVISIBLE);
+        weatherNow.setVisibility(View.INVISIBLE);
+        wind.setVisibility(View.INVISIBLE);
+        maxTmp.setVisibility(View.INVISIBLE);
+
+        ql.setVisibility(View.INVISIBLE);
+        aqi.setVisibility(View.INVISIBLE);
+        pm.setVisibility(View.INVISIBLE);
+
+        comfit.setVisibility(View.INVISIBLE);
+        wear.setVisibility(View.INVISIBLE);
+
+    }
+
+
+    public void setWeatherViewVisible(){
+        tmp.setVisibility(View.VISIBLE);
+        weatherNow.setVisibility(View.VISIBLE);
+        wind.setVisibility(View.VISIBLE);
+        maxTmp.setVisibility(View.VISIBLE);
+
+        ql.setVisibility(View.VISIBLE);
+        aqi.setVisibility(View.VISIBLE);
+        pm.setVisibility(View.VISIBLE);
+
+        comfit.setVisibility(View.VISIBLE);
+        wear.setVisibility(View.VISIBLE);
     }
 }

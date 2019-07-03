@@ -52,7 +52,7 @@ public class ChooseArea extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.area_choose);
-//        switchToWeatherIfHaveChooseCity();
+        switchToWeatherIfHaveChooseCity();
         Toolbar toolbar = findViewById(R.id.toolbar);
         progressBar = findViewById(R.id.progressbar);
         toolbar.setTitle("");
@@ -64,8 +64,12 @@ public class ChooseArea extends AppCompatActivity {
 
     public void switchToWeatherIfHaveChooseCity(){
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(ChooseArea.this);
-        if (preferences.getString("pic_content",null) != null){
+        String name = preferences.getString("city_name",null);
+        String id = preferences.getString("weather_id",null);
+        if (name != null && id != null){
             Intent intent = new Intent(ChooseArea.this,WeatherActivity.class);
+            intent.putExtra("city_name",name);
+            intent.putExtra("weather_id",id);
             startActivity(intent);
             finish();
         }
@@ -180,8 +184,13 @@ public class ChooseArea extends AppCompatActivity {
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                 County selectedCounty = countyList.get(position);
                                 String weatherId = selectedCounty.getWeatherId();
+                                String name = selectedCounty.getName();
+                                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(ChooseArea.this).edit();
+                                editor.putString("city_name",name);
+                                editor.putString("weather_id",weatherId);
+                                editor.apply();
                                 Intent intent = new Intent(ChooseArea.this,WeatherActivity.class);
-                                intent.putExtra("city_name",selectedCounty.getName());
+                                intent.putExtra("city_name",name);
                                 intent.putExtra("weather_id",weatherId);
                                 startActivity(intent);
 
