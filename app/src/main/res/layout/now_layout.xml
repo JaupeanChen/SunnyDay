@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end"
         android:textSize="50sp"
+        android:textColor="#228B22"
         android:gravity="center"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"

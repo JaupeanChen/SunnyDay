@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">SunnyDay</string>
+    <string name="never_select">您还没有收藏过城市哦</string>
 </resources>
