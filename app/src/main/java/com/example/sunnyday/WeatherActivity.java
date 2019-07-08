@@ -304,7 +304,7 @@ public class WeatherActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case android.R.id.home :
-                //因为前面在用户选择过城市之后，做了缓存处理，再次进入程序时如果判断到缓存存在就直接跳到天气界面
+                //因为前面在用户选择过城市之后，做了缓存处理，再次进入程序时如果判断到缓存存在就直接跳到天气界面，
                 //所以当我们在天气界面要返回到选择界面的时候，它还是判定我们已经缓存了，还是会直接跳回来，所以在这里我们要
                 //先将缓存的城市名和天气id删除掉
                 SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(WeatherActivity.this).edit();
@@ -317,6 +317,11 @@ public class WeatherActivity extends AppCompatActivity {
 
             case R.id.right_home:
                 drawerLayout.openDrawer(GravityCompat.END);
+                break;
+
+            case R.id.search:
+                Intent searchIntent = new Intent(WeatherActivity.this,SearchActivity.class);
+                startActivity(searchIntent);
                 break;
 
         }
@@ -434,6 +439,15 @@ public class WeatherActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+//        navigationView.setOnLongClickListener(new View.OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(View v) {
+//                Toast.makeText(WeatherActivity.this,"Long Click.",Toast.LENGTH_SHORT).show();
+//
+//                return true;
+//            }
+//        });
     }
 
     public void setFloatingButtonListener(){
