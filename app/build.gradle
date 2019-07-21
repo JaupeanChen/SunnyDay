@@ -36,5 +36,6 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     implementation 'de.hdodenhof:circleimageview:3.0.0'
+    implementation 'org.greenrobot:eventbus:3.1.1'
     implementation files('libs/sdk_HeWeather_Public_Android_V3.0.jar')
 }

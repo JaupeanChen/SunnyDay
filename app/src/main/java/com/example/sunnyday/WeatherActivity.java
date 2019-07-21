@@ -23,14 +23,19 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.sunnyday.Entity.WeatherInfoWrapper;
 import com.example.sunnyday.Util.OkHttpUtil;
 import com.example.sunnyday.db.MyDatabaseHelper;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -56,7 +61,9 @@ import okhttp3.Response;
 public class WeatherActivity extends AppCompatActivity {
     public String weatherId;
     public String cityName;
+    public boolean isSaved;
 
+    private Button savedButton;
     private TextView date, tmp,weatherNow,wind,maxTmp;
     private LinearLayout linearLayout;
 
@@ -71,7 +78,8 @@ public class WeatherActivity extends AppCompatActivity {
     private SwipeRefreshLayout swipeRefreshLayout;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
-    private FloatingActionButton floatingButton;
+//    private FloatingActionButton floatingButton;
+
 
     public MyDatabaseHelper dbHelper;
     public SQLiteDatabase db;
@@ -84,6 +92,12 @@ public class WeatherActivity extends AppCompatActivity {
         HeConfig.init("HE1906262053031373","b221f29802ca44d5a1ada8d11a65e8d2");
         HeConfig.switchToFreeServerNode();
         fitsSystemWindows();
+        //通过EventBus来实现后台自动更新
+        EventBus.getDefault().register(WeatherActivity.this);
+
+        dbHelper = new MyDatabaseHelper(WeatherActivity.this,"CityStore",null,1);
+        db = dbHelper.getWritableDatabase();
+
         date = findViewById(R.id.date);
         tmp = findViewById(R.id.temp);
         weatherNow =findViewById(R.id.weather_now);
@@ -107,8 +121,7 @@ public class WeatherActivity extends AppCompatActivity {
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
         setNavigationViewListener();
-        floatingButton = findViewById(R.id.floating_button);
-        setFloatingButtonListener();
+//        floatingButton = findViewById(R.id.floating_button);
 
 
         titleView =findViewById(R.id.image);
@@ -121,8 +134,8 @@ public class WeatherActivity extends AppCompatActivity {
         if (actionBar != null ){
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-        collapsingToolbarLayout.setCollapsedTitleTextColor(292421);
         collapsingToolbarLayout.setTitle(cityName);
+        collapsingToolbarLayout.setCollapsedTitleTextColor(Color.WHITE);
 
         weatherId = getIntent().getStringExtra("weather_id");
         queryWeatherNow(weatherId);
@@ -131,12 +144,24 @@ public class WeatherActivity extends AppCompatActivity {
         queryWeatherForecast(weatherId);
         setScrollViewBackground();
 
-        dbHelper = new MyDatabaseHelper(WeatherActivity.this,"CityStore",null,1);
-        db = dbHelper.getWritableDatabase();
+        savedButton = findViewById(R.id.saved_button);
+        //先判断该城市是否收藏过，如果是那Button就显示已收藏的图案
+        String savedId = queryFromDatabase(cityName);
+        if (weatherId.equals(savedId)) {
+            savedButton.setActivated(true);
+            isSaved = true;
+        }
+        setSavedButtonListener();
+
+
+//        if (weatherId.equals(savedId)){
+//            floatingButton.setPressed(true);
+//            isSaved = true;
+//        }
+//        setFloatingButtonListener();
 
         //每次进入天气界面的时候，都去数据库里读取收藏城市数据，然后动态地显示到NavigationView上，这样就能保证显示的都是最新收藏的城市了
         loadSavedCityForNav();
-
 
     }
 
@@ -439,40 +464,74 @@ public class WeatherActivity extends AppCompatActivity {
                 return true;
             }
         });
-
-//        navigationView.setOnLongClickListener(new View.OnLongClickListener() {
-//            @Override
-//            public boolean onLongClick(View v) {
-//                Toast.makeText(WeatherActivity.this,"Long Click.",Toast.LENGTH_SHORT).show();
-//
-//                return true;
-//            }
-//        });
     }
 
-    public void setFloatingButtonListener(){
-        floatingButton.setOnClickListener(new View.OnClickListener() {
+    public void setSavedButtonListener(){
+        savedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                //添加之前先判断数据库里是否已经有添加该城市，如果没有再进行添加,不然的话就会出现一个城市添加了多次的情况
-                //这里我们拿城市名去数据库查找，让它返回天气id，如果这个id不为null，那就说明已经添加过了，否则再进行添加
-                //这里的这个查询方法为什么要返回天气id呢，因为后面再NavigationView进行监听返回天气显示界面的时候需要传递城市名
-                //和id，而
-                String id = queryFromDatabase(cityName);
-                if (id != null){
-                    Toast.makeText(WeatherActivity.this,"该城市已经收藏过了哦！",Toast.LENGTH_SHORT).show();
-                }else {
+                if (!isSaved){
                     ContentValues values = new ContentValues();
                     values.put("city_name",cityName);
                     values.put("weather_id",weatherId);
                     db.insert("CityList",null,values);
                     loadSavedCityForNav();
+                    savedButton.setActivated(true);
+                    isSaved = true;
                     Toast.makeText(WeatherActivity.this,"收藏城市成功！",Toast.LENGTH_SHORT).show();
+                }else {
+                    db.delete("CityList","weather_id=?",new String[]{ weatherId });
+                    loadSavedCityForNav();
+                    savedButton.setActivated(false);
+                    isSaved = false;
+                    Toast.makeText(WeatherActivity.this,"取消收藏！",Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
+
+//    public void setFloatingButtonListener(){
+//        floatingButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                //添加之前先判断数据库里是否已经有添加该城市，如果没有再进行添加,不然的话就会出现一个城市添加了多次的情况
+//                //这里我们拿城市名去数据库查找，让它返回天气id，如果这个id不为null，那就说明已经添加过了，否则再进行添加
+//                //这里的这个查询方法为什么要返回天气id呢，因为后面再NavigationView进行监听跳转到天气显示界面的时候需要传递城市名和id
+////                String id = queryFromDatabase(cityName);
+////                if (id != null){
+////                    Toast.makeText(WeatherActivity.this,"该城市已经收藏过了哦！",Toast.LENGTH_SHORT).show();
+////                }else {
+////                    ContentValues values = new ContentValues();
+////                    values.put("city_name",cityName);
+////                    values.put("weather_id",weatherId);
+////                    db.insert("CityList",null,values);
+////                    loadSavedCityForNav();
+////                    Toast.makeText(WeatherActivity.this,"收藏城市成功！",Toast.LENGTH_SHORT).show();
+////                }
+//
+//                //用另一种方法，根据FAB的显示图案来进行收藏/取消的逻辑处理
+//                if (!isSaved){
+//                    ContentValues values = new ContentValues();
+//                    values.put("city_name",cityName);
+//                    values.put("weather_id",weatherId);
+//                    db.insert("CityList",null,values);
+//                    loadSavedCityForNav();
+//                    floatingButton.setPressed(true);
+//                    isSaved = true;
+//                    Toast.makeText(WeatherActivity.this,"收藏城市成功！",Toast.LENGTH_SHORT).show();
+//                }else {
+//                    db.delete("CityList","weather_id=?",new String[]{ weatherId });
+//                    loadSavedCityForNav();
+//                    floatingButton.setPressed(false);
+//                    isSaved = false;
+//                    Toast.makeText(WeatherActivity.this,"取消收藏！",Toast.LENGTH_SHORT).show();
+//                }
+//
+//
+//            }
+//        });
+//    }
 
     public String queryFromDatabase(String cityName){
         String id = null ;
@@ -526,4 +585,16 @@ public class WeatherActivity extends AppCompatActivity {
         editor.apply();
 
     }
+
+    @Subscribe
+    public void onEventMessage(WeatherInfoWrapper weatherInfo){
+
+
+    }
+
+    public void updateInfo(){
+
+    }
+
+
 }

@@ -68,17 +68,6 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     public void getCityTitleName(String cityName){
-        HeWeather.getSearch(getApplicationContext(), new HeWeather.OnResultSearchBeansListener() {
-            @Override
-            public void onError(Throwable throwable) {
-
-            }
-
-            @Override
-            public void onSuccess(Search search) {
-
-            }
-        });
         HeWeather.getWeather(SearchActivity.this, cityName, new HeWeather.OnResultWeatherDataListBeansListener() {
             @Override
             public void onError(Throwable throwable) {

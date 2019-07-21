@@ -13,8 +13,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SearchActivity"
-            android:launchMode="singleTask"></activity>
+        <service
+            android:name=".service.UpdateService"
+            android:enabled="true"
+            android:exported="true"></service>
+
+        <activity
+            android:name=".SearchActivity"
+            android:launchMode="singleTask" />
         <activity
             android:name=".WeatherActivity"
             android:theme="@style/WeatherActivityTheme." />

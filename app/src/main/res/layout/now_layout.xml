@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="25dp"
-    android:layout_marginRight="25dp">
+    android:layout_marginRight="15dp">
 
 
     <TextView
@@ -12,12 +12,28 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end"
         android:textSize="50sp"
-        android:textColor="#228B22"
+        android:textColor="@color/colorPrimary"
         android:gravity="center"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_marginRight="20dp"
         />
+
+    <Button
+        android:id="@+id/saved_button"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_alignTop="@+id/temp"
+        android:layout_alignRight="@+id/temp"
+        android:layout_alignEnd="@+id/temp"
+        android:background="@drawable/activated_state"
+        />
+
     <TextView
         android:id="@+id/weather_now"
         android:layout_width="wrap_content"

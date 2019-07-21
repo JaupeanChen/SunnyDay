@@ -26,8 +26,8 @@
                 android:layout_height="match_parent"
                 android:theme="@style/ThemeOverlay.AppCompat.Light"
                 android:fitsSystemWindows="true"
-                app:contentScrim="?attr/colorPrimary"
-                app:layout_scrollFlags="scroll|snap">
+                app:contentScrim="?attr/colorPrimaryDark"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
                 <ImageView
                     android:id="@+id/image"
@@ -94,18 +94,19 @@
 
         </android.support.v4.widget.SwipeRefreshLayout>
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/floating_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:src="@drawable/add_button"
-            app:fabSize="mini"
-            app:backgroundTint="@color/colorPrimary"
-            app:rippleColor="@color/colorPrimaryDark"
-            app:layout_anchor="@id/nested_scroll_view"
-            app:layout_anchorGravity="end|top"
-            />
+        <!--<android.support.design.widget.FloatingActionButton-->
+            <!--android:id="@+id/floating_button"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_margin="10dp"-->
+            <!--android:background="@drawable/activated_state"-->
+            <!--app:fabSize="mini"-->
+            <!--app:layout_anchor="@id/nested_scroll_view"-->
+            <!--app:layout_anchorGravity="end|top"-->
+            <!--app:layout_scrollFlags="scroll|enterAlwaysCollapsed"-->
+            <!--/>-->
+        <!--app:backgroundTint="@color/colorPrimary"-->
+        <!--app:rippleColor="@color/colorPrimaryDark"-->
 
     </android.support.design.widget.CoordinatorLayout>
 
