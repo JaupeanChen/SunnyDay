@@ -79,18 +79,21 @@ public class SearchActivity extends AppCompatActivity {
             public void onSuccess(Weather weather) {
                 Basic basic = weather.getBasic();
                 String cityTitle = basic.getParent_city();
+                String weatherId = basic.getCid();
 
                 //这里需要处理的一个情况还是WeatherActivity的本地缓存，要先remove掉。但是这样一来，下次重新进入的时候就需要重新选择
                 //所以可能对于城市信息的缓存会不会放在WeatherActivity里面来做会更好？
                 SharedPreferences.Editor preferences = PreferenceManager.getDefaultSharedPreferences(SearchActivity.this).edit();
-                preferences.remove("city_name");
-                preferences.remove("weather_id");
+//                preferences.remove("city_name");
+//                preferences.remove("weather_id");
+                preferences.putString("city_name",cityTitle);
+                preferences.putString("weather_id",weatherId);
                 preferences.apply();
 
 
                 Intent intent = new Intent(SearchActivity.this,WeatherActivity.class);
                 intent.putExtra("city_name",cityTitle);
-                intent.putExtra("weather_id",cityName);
+                intent.putExtra("weather_id",weatherId);
                 startActivity(intent);
 
             }

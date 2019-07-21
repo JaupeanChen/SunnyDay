@@ -535,7 +535,7 @@ public class WeatherActivity extends AppCompatActivity {
 
     public String queryFromDatabase(String cityName){
         String id = null ;
-        Cursor cursor = db.query("CityList",new String[]{"weather_id"},"city_name=?",new  String[]{cityName},null,null,null);
+        Cursor cursor = db.query("CityList",new String[]{"weather_id"},"city_name=?",new String[]{ cityName },null,null,null);
         if (cursor.getCount() == 0){
             return null;
         }
