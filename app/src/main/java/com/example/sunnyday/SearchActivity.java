@@ -91,11 +91,12 @@ public class SearchActivity extends AppCompatActivity {
                 preferences.apply();
 
 
-                Intent intent = new Intent(SearchActivity.this,WeatherActivity.class);
+                Intent intent = new Intent();
                 intent.putExtra("city_name",cityTitle);
                 intent.putExtra("weather_id",weatherId);
                 startActivity(intent);
-
+                setResult(RESULT_OK,intent);
+                finish();
             }
         });
 

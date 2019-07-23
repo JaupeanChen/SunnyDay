@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -346,11 +347,27 @@ public class WeatherActivity extends AppCompatActivity {
 
             case R.id.search:
                 Intent searchIntent = new Intent(WeatherActivity.this,SearchActivity.class);
-                startActivity(searchIntent);
+                startActivityForResult(searchIntent,0);
                 break;
 
         }
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        switch (requestCode){
+            case 0:
+                if (resultCode == RESULT_OK){
+                    String cityName = data.getStringExtra("city_name");
+                    String weatherId = data.getStringExtra("weather_id");
+                    queryAndShowWeather(cityName,weatherId);
+                }
+                break;
+                default:
+                    Toast.makeText(WeatherActivity.this,"Faild to search city",Toast.LENGTH_SHORT);
+        }
+
     }
 
     //融合状态栏的直接代码动态判断
