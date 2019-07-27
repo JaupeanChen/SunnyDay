@@ -156,10 +156,10 @@ public class WeatherActivity extends AppCompatActivity {
 
 
 //        if (weatherId.equals(savedId)){
-//            floatingButton.setPressed(true);
-//            isSaved = true;
-//        }
-//        setFloatingButtonListener();
+////            floatingButton.setPressed(true);
+////            isSaved = true;
+////        }
+////        setFloatingButtonListener();
 
         //每次进入天气界面的时候，都去数据库里读取收藏城市数据，然后动态地显示到NavigationView上，这样就能保证显示的都是最新收藏的城市了
         loadSavedCityForNav();
@@ -365,7 +365,7 @@ public class WeatherActivity extends AppCompatActivity {
                 }
                 break;
                 default:
-                    Toast.makeText(WeatherActivity.this,"Faild to search city",Toast.LENGTH_SHORT);
+                    Toast.makeText(WeatherActivity.this,"Fail to search city",Toast.LENGTH_SHORT);
         }
 
     }
