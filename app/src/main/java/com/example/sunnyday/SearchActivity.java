@@ -2,6 +2,7 @@ package com.example.sunnyday;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.support.design.widget.TextInputEditText;
 import android.support.v13.view.inputmethod.EditorInfoCompat;
@@ -17,6 +18,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,11 +47,15 @@ public class SearchActivity extends AppCompatActivity {
     private List<String> list;
     private List<String> weatherList;
 
+    private Button searchButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-        TextInputEditText inputEditText = findViewById(R.id.search_input);
+        EditText inputEditText = findViewById(R.id.search_input);
+        searchButton = findViewById(R.id.search_button);
+//        searchButton.setSelected(false);
         recyclerView = findViewById(R.id.recycler_view);
         LinearLayoutManager manager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(manager);
@@ -62,13 +68,13 @@ public class SearchActivity extends AppCompatActivity {
             }
         });
         list = new ArrayList<>();
-        list.add("候选1");
-        list.add("候选2");
-        list.add("候选3");
+//        list.add("候选1");
+//        list.add("候选2");
+//        list.add("候选3");
         weatherList = new ArrayList<>();
-        weatherList.add("id1");
-        weatherList.add("id2");
-        weatherList.add("id3");
+//        weatherList.add("id1");
+//        weatherList.add("id2");
+//        weatherList.add("id3");
 
         adapter = new MyAdapter(SearchActivity.this, list, weatherList);
         recyclerView.setAdapter(adapter);
@@ -83,6 +89,14 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 Log.d(TAG, "onTextChanged: " + s + "start" + start + "before" + before);
+//                if (s != null){
+//                    searchButton.setSelected(true);
+//                }else {
+//                    searchButton.setSelected(false);
+//                }
+                if (s != null){
+                    searchButton.setTextColor(Color.parseColor("#008577"));
+                }
 
             }
 
@@ -92,6 +106,11 @@ public class SearchActivity extends AppCompatActivity {
 //                if (s == null || s.toString().length() < 2 || s.toString().equals(SearchActivity.this.lastSearchLocation)) {
 //                    return;
 //                }
+
+                if (s.toString().equals("")){
+                    searchButton.setTextColor(Color.parseColor("#C0C0C0"));
+                }
+
 
                 String url = "https://search.heweather.net/find?location=" + s + "&key=28b8e2cacacb49f590bdfe10d44c5231&number=10";
                 OkHttpUtil.sendRequest(url, new Callback() {
@@ -128,6 +147,19 @@ public class SearchActivity extends AppCompatActivity {
                     }
                 });
 
+            }
+        });
+
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String cityName = list.get(0);
+                String weatherId = weatherList.get(0);
+                Intent intent = new Intent(SearchActivity.this, WeatherActivity.class);
+                intent.putExtra("city_name",cityName);
+                intent.putExtra("weather_id",weatherId);
+                startActivity(intent);
+                SearchActivity.this.finish();
             }
         });
 

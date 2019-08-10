@@ -40,7 +40,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         String name = list.get(i);
         String weatherId = weatherList.get(i);
-        viewHolder.textView.setText(name + " " + weatherId);
+        viewHolder.textView.setText(name);
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

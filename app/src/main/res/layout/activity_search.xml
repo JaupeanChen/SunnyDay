@@ -6,40 +6,84 @@
     android:orientation="vertical"
     tools:context=".SearchActivity">
 
-    <RelativeLayout
+    <!--<RelativeLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content">-->
+
+        <!--<android.support.design.widget.TextInputLayout-->
+            <!--android:id="@+id/text_layout"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginLeft="32dp"-->
+            <!--android:layout_marginTop="20dp"-->
+            <!--android:focusable="false"-->
+            <!--android:focusableInTouchMode="true">-->
+
+            <!--<android.support.design.widget.TextInputEditText-->
+                <!--android:id="@+id/search_input"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:drawableLeft="@drawable/search"-->
+                <!--android:drawableStart="@drawable/search"-->
+                <!--android:singleLine="true"-->
+                <!--android:hint="请输入城市"-->
+                <!--/>-->
+        <!--</android.support.design.widget.TextInputLayout>-->
+        <!--<Button-->
+            <!--android:id="@+id/back_button"-->
+            <!--android:layout_width="32dp"-->
+            <!--android:layout_height="32dp"-->
+            <!--android:layout_alignParentLeft="true"-->
+            <!--android:layout_alignParentStart="true"-->
+            <!--android:layout_alignBottom="@+id/text_layout"-->
+            <!--android:layout_alignLeft="@+id/text_layout"-->
+            <!--android:layout_marginBottom="6dp"-->
+            <!--android:background="@drawable/back"/>-->
+
+        <!--<Button-->
+            <!--android:id="@+id/search_button"-->
+            <!--android:layout_width="60dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_alignParentEnd="true"-->
+            <!--android:layout_alignBottom="@+id/text_layout"-->
+            <!--android:textColor="@color/colorGray"-->
+            <!--android:background="@null"-->
+            <!--android:text="搜索"/>-->
+    <!--</RelativeLayout>-->
+
+    <LinearLayout
+        android:layout_marginTop="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/text_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="32dp"
-            android:layout_marginTop="20dp"
-            android:focusable="false"
-            android:focusableInTouchMode="true">
-
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/search_input"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/search"
-                android:drawableStart="@drawable/search"
-                android:singleLine="true"
-                android:hint="请输入城市"
-                />
-        </android.support.design.widget.TextInputLayout>
         <Button
             android:id="@+id/back_button"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignBottom="@+id/text_layout"
-            android:layout_alignLeft="@+id/text_layout"
-            android:layout_marginBottom="6dp"
-            android:background="@drawable/back"/>
-    </RelativeLayout>
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/back"
+            />
+
+        <EditText
+            android:id="@+id/search_input"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="请输入城市"
+            />
+
+        <Button
+            android:id="@+id/search_button"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:textColor="@color/colorGray"
+            android:layout_marginRight="10dp"
+            android:text="搜索"
+            />
+
+    </LinearLayout>
 
 
 
